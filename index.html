@@ -1,0 +1,123 @@
+<html>
+<head>
+  <title>Galeria Daycare</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1E1E1E;
+      padding: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .popup img {
+      max-width: 80%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
+    .popup button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: red;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .popup a {
+      margin-top: 10px;
+      background: #2196F3;
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+  <script>
+    function carregarImagens() {
+      fetch("https://script.google.com/macros/s/AKfycbzYCUqMky9nbbDmTH4UcQQPocvvkNQxZr81viNtBHEzRf7kp05rcwlfmIlhndJ2uYCd/exec")
+        .then(response => response.json())
+        .then(imagens => mostrarImagens(imagens))
+        .catch(error => console.error("Erro ao carregar imagens:", error));
+    }
+    
+    function mostrarImagens(imagens) {
+      var container = document.getElementById("galeria");
+      container.innerHTML = "";
+      imagens.forEach(img => {
+        var imagem = document.createElement("img");
+        imagem.src = img.thumb;
+        imagem.alt = img.nome;
+        imagem.onclick = () => abrirPopup(img.thumb, img.download);
+        container.appendChild(imagem);
+      });
+    }
+    
+    function abrirPopup(url, downloadUrl) {
+      document.getElementById("popupImage").src = url;
+      document.getElementById("downloadBtn").href = downloadUrl;
+      document.getElementById("popup").style.display = "flex";
+    }
+    
+    function fecharPopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+    
+    window.onload = carregarImagens;
+  </script>
+</head>
+<body>
+  <header>Galeria Daycare</header>
+  <div class="gallery" id="galeria"></div>
+  
+  <div id="popup" class="popup" onclick="fecharPopup()">
+    <button onclick="fecharPopup(); event.stopPropagation();">X</button>
+    <img id="popupImage" src="" alt="Imagem" onclick="event.stopPropagation();">
+    <a id="downloadBtn" download>Baixar imagem</a>
+  </div>
+  
+  <footer>&copy; 2025 Galeria Daycare - Todos os direitos reservados.</footer>
+</body>
+</html>
