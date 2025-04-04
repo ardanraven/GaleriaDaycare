@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>Galeria Daycare</title>
@@ -76,36 +77,42 @@
     }
   </style>
   <script>
-    function carregarImagens() {
-      fetch("https://script.google.com/macros/s/AKfycbzYCUqMky9nbbDmTH4UcQQPocvvkNQxZr81viNtBHEzRf7kp05rcwlfmIlhndJ2uYCd/exec")
+    function carregarArquivos() {
+      fetch("https://script.google.com/macros/s/AKfycbxH67nKztO4sSmEFT9DTxEc4k_z50L0_nYR0-hNqWJiRPOjzKcJici0KhriPRS3vm_o/exec")
         .then(response => response.json())
-        .then(imagens => mostrarImagens(imagens))
-        .catch(error => console.error("Erro ao carregar imagens:", error));
+        .then(arquivos => mostrarArquivos(arquivos))
+        .catch(error => console.error("Erro ao carregar arquivos:", error));
     }
     
-    function mostrarImagens(imagens) {
+    function mostrarArquivos(arquivos) {
       var container = document.getElementById("galeria");
       container.innerHTML = "";
-      imagens.forEach(img => {
-        var imagem = document.createElement("img");
-        imagem.src = img.thumb;
-        imagem.alt = img.nome;
-        imagem.onclick = () => abrirPopup(img.thumb, img.download);
-        container.appendChild(imagem);
+      arquivos.forEach(arq => {
+        var elemento = document.createElement("img");
+        elemento.src = arq.thumb;
+        elemento.alt = arq.nome;
+        elemento.onclick = () => arq.isVideo ? abrirEmNovaAba(arq.view) : abrirPopup(arq.view, arq.download);
+        container.appendChild(elemento);
       });
     }
     
     function abrirPopup(url, downloadUrl) {
-      document.getElementById("popupImage").src = url;
+      var popup = document.getElementById("popup");
+      var img = document.getElementById("popupImg");
+      img.src = url;
       document.getElementById("downloadBtn").href = downloadUrl;
-      document.getElementById("popup").style.display = "flex";
+      popup.style.display = "flex";
+    }
+    
+    function abrirEmNovaAba(url) {
+      window.open(url, "_blank");
     }
     
     function fecharPopup() {
       document.getElementById("popup").style.display = "none";
     }
     
-    window.onload = carregarImagens;
+    window.onload = carregarArquivos;
   </script>
 </head>
 <body>
@@ -114,7 +121,7 @@
   
   <div id="popup" class="popup" onclick="fecharPopup()">
     <button onclick="fecharPopup(); event.stopPropagation();">X</button>
-    <img id="popupImage" src="" alt="Imagem" onclick="event.stopPropagation();">
+    <img id="popupImg" src="" alt="Imagem">
     <a id="downloadBtn" download>Baixar imagem</a>
   </div>
   
